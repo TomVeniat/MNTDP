@@ -1,6 +1,5 @@
 # Lileb Training
-
-This project contains different
+/!\ Documentation in progress, do not hesitate to open an issue for questions.
 
 ### Installation:
 
