@@ -1,0 +1,29 @@
+bs4
+lxml
+pydot
+tqdm
+numpy
+torch
+pydot
+pandas
+plotly
+psutil
+#sacred
+pymongo
+imageio
+networkx
+tabulate
+json2html
+pycocotools
+torchvision
+scikit-learn
+more_itertools
+pytorch-ignite
+
+-e git+git://github.com/TomVeniat/sacred.git#egg=sacred
+git+git://github.com/facebookresearch/visdom.git
+git+git://github.com/pytorch/ignite.git
+git+git://github.com/facebookresearch/CTrLBenchmark.git
+
+#https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-0.8.0.dev3-cp37-cp37m-macosx_10_6_intel.whl ; sys_platform == "darwin"
+#https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-0.8.0.dev3-cp37-cp37m-manylinux1_x86_64.whl ; sys_platform == "linux"

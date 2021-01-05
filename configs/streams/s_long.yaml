@@ -1,0 +1,326 @@
+datasets:
+    task_gen:
+        _name: task_gen
+        n_initial_classes: 5
+        samples_per_class: [5000, 100, 1000]
+        split_names: ['Train', 'Val', 'Test']
+        tta: True
+
+        concept_pool:
+#            _name: mnist_tree
+            _name: md_tree_nodtd
+#            _name: cifar100_tree
+
+        transformation_pool:
+#            _name: rainbow_x_transformation
+            _name: id_x_transformation
+            format_image: True
+
+        strat:
+#            _name: mixed_remember
+#            _name: mixed_overwrite
+#            _name: mixed_transfo
+#            _name: mixed_fine_grained
+#            _name: mixed_new_head
+            _name: mixed_all
+            strategies:
+                split:
+                    _name: split
+                    traj: null
+                    concepts_preferred_lca_dist: -1
+                    with_replacement: True
+                    first_level_weighting: ds_uniform
+                data:
+                    _name: data
+                    n_samples_per_class_options: [
+                        [[1000, 500], [5, 3]],
+                        [[1000, 500], [5, 3], [5, 3], [5, 3]],
+                        [[5, 3]]
+                    ]
+                    random: True
+                    with_replacement: True
+                    steps: [33, 66]
+
+
+modules:
+    ll_models:
+#        inde-batch:
+#            _name: change-layer-resnet
+#            share_layer: [0, 0, 0, 0, 0 ,0]
+#            ray_resources:
+#                cpu: 0.1
+#                gpu: 0.3
+#        finetune:
+#            _name: change-layer-resnet
+#            share_layer: [1, 1, 1, 1, 1, 1]
+#            ray_resources:
+#                cpu: 0.1
+#                gpu: 0.3
+
+##
+#        new-head-freez:
+#            _name: change-layer-resnet
+#            norm_layer: batch
+#            share_layer: [1, 1, 1, 1, 1, 0]
+#            freeze_backbone: True
+#            ray_resources:
+#                cpu: 1
+#                gpu: 0.25
+#        new-head-finetune:
+#            _name: change-layer-resnet
+#            norm_layer: batch
+#            share_layer: [1, 1, 1, 1, 1, 0]
+#            freeze_backbone: False
+#            ray_resources:
+#                cpu: 2
+#                gpu: 0.2
+#        new-leg-freez:
+#            _name: change-layer-resnet
+#            norm_layer: batch
+#            share_layer: [0, 1, 1, 1, 1, 1]
+#            freeze_backbone: True
+#            ray_resources:
+#                cpu: 2
+#                gpu: 0.2
+#        new-leg-finetune:
+#            _name: change-layer-resnet
+#            norm_layer: batch
+#            share_layer: [0, 1, 1, 1, 1, 1]
+#            freeze_backbone: False
+#            ray_resources:
+#                cpu: 2
+#                gpu: 0.2
+#
+#        ewc-new-all-online-1:
+#            _name: ewc-cnn
+#            classic: False
+#            online: True
+#            share_head: False
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 1
+#        ewc-new-all-online-10:
+#            _name: ewc-cnn
+#            classic: False
+#            online: True
+#            share_head: False
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 10
+#        ewc-new-all-online-100:
+#            _name: ewc-cnn
+#            classic: False
+#            online: True
+#            share_head: False
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 100
+#        ewc-new-all-online-1000:
+#            _name: ewc-cnn
+#            classic: False
+#            online: True
+#            share_head: False
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 1000
+#        ewc-new-all-online-10000:
+#            _name: ewc-cnn
+#            classic: False
+#            online: True
+#            share_head: False
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 10000
+##
+
+
+
+#        PSSN-nas-restricted-fw:
+#            _name: pssn-resnet
+#            norm_layer: batch
+#            n_source_models: 1
+#            block_id: [0, 1, 1, 2, 2, 3 ,3, 4, 5, 6]
+#            grid_params:
+#                optim:
+#                    - lr:  [1.e-3]
+#                      weight_decay: [1.e-4]
+#                    - lr:  [1.e-2, 1.e-3]
+#                      weight_decay: 0
+#                learner-params:
+#                    arch_loss_coef: [0]
+#                    entropy_coef: [1]
+#            ray_resources:
+#                cpu: 0.1
+#                gpu: 0.3
+#        PSSN-search-6-fw-A:
+#            _name: pssn-resnet
+#            norm_layer: batch
+#            strat: search_all
+#            block_id: [0, 1, 1, 2, 2, 3 ,3, 4, 4, 5]
+#            n_source_models: 1
+#            #            method: rand
+#            method: knn
+#            grid_params:
+#                optim:
+#                    - lr:  [1.e-2, 1.e-3,]
+#                      weight_decay: [0, 1.e-4, 1.e-5]
+#                #                    - lr:  [1.e-3,]
+#                #                      weight_decay: [0, 1.e-5]
+#                learner-params:
+#                    arch_loss_coef: 0
+#                    entropy_coef: 0
+#            ray_resources:
+#                cpu: 0.1
+#                gpu: 1
+#        PSSN-search-6-fw:
+#            _name: pssn-resnet
+#            norm_layer: batch
+#            strat: search_all
+#            block_id: [0, 1, 1, 2, 2, 3 ,3, 4, 5, 6]
+#            n_source_models: 1
+#            n_neighbors: 5
+##            method: rand
+#            method: knn
+#            grid_params:
+#                optim:
+#                    - lr:  [1.e-2, 1.e-3,]
+#                      weight_decay: [0, 1.e-4, 1.e-5]
+##                    - lr:  [1.e-3,]
+##                      weight_decay: [0, 1.e-5]
+#                learner-params:
+#                    arch_loss_coef: 0
+#                    entropy_coef: 0
+#            ray_resources:
+#                cpu: 0.1
+#                gpu: 1
+#        PSSN-nas-full-fw:
+#            _name: pssn-resnet
+#            n_source_models: -1
+#            grid_params:
+#                optim:
+#                    - lr:  [1.e-3]
+#                      weight_decay: [0, 1.e-4]
+#                    - lr:  [1.e-2, 1.e-3]
+#                      weight_decay: 0
+#                learner-params:
+#                    arch_loss_coef: 0
+#                    entropy_coef: 0
+#                    split_training: True
+#            ray_resources:
+#                cpu: .1
+#                gpu: 1
+#        hat:
+#            _name: hat-cnn
+#            #            hidden_size: [1]
+#            #            channel_scaling: False
+#            grid_params:
+#                optim:
+#                    lr:  [5.e-2, 5.e-3]
+#                    weight_decay: [0, 1.e-4]
+#                #                    lr:  [1.e-3]
+#                #                    weight_decay: [0]
+#                learner-params:
+#                    lamda: [0.75]
+#                    smax: [400]
+#            ray_resources:
+#                cpu: 2
+#                gpu: 0.6
+#        PSSN-Alex-search-6-fw:
+#            _name: pssn-alexnet
+#            strat: search_all
+#            n_source_models: 1
+#            #            channel_scaling: True
+#            #            channel_scaling: True
+#            #            block_id: [0, 1, 2, 3, 4, 5 ,5, 5, 6, 7]
+#            #            n_convs: 3
+#            #            stride: [2,4,2]
+#            grid_params:
+#                optim:
+#                    #                    - lr:  [1.e-2]
+#                    #                      weight_decay: [1.e-5 ]
+#                    - lr:  [1.e-2, 1.e-3]
+#                      weight_decay: [0, 1.e-4, 1.e-5]
+#                learner-params:
+#                    arch_loss_coef: 0
+#                    entropy_coef: 0
+#                    split_training: True
+#            ray_resources:
+#                cpu: 2
+#                gpu: 1
+
+#        hat:
+#            _name: hat
+#            wide: 1
+#            #            hidden_size: [1]
+#            #            channel_scaling: False
+#            grid_params:
+#                optim:
+#                    lr:  [5.e-2, 1.e-2, 5.e-3, 1.e-3]
+#                    weight_decay: [0, 1.e-4, 1.e-5]
+#                #                    lr:  [1.e-3]
+#                #                    weight_decay: [0]
+#                learner-params:
+#                    lamda: [0.75]
+#                    smax: [400]
+#            ray_resources:
+#                cpu: 2
+#                gpu: 0.3
+        wider-hat:
+            _name: hat
+            wide: 6.5
+            #            hidden_size: [1]
+            #            channel_scaling: False
+            grid_params:
+                optim:
+                    lr:  [5.e-2, 1.e-2, 5.e-3]
+                    weight_decay: [0, 1.e-4]
+                #                    lr:  [1.e-3]
+                #                    weight_decay: [0]
+                learner-params:
+                    lamda: [0.75]
+                    smax: [400]
+            ray_resources:
+                cpu: 2
+                gpu: 1
+optimizers:
+    optim:
+        _name: adam
+        _modules: []
+
+experiment:
+    _name: stream_tuning
+
+#    ref_params_id: 2628 # 1
+#    ref_params_id: 2789 # 2
+#    load_tasks_from: 2789
+#    ref_params_id: 2792 # 3
+#    load_tasks_from: 2792
+
+    use_ray: True
+    use_processes: True
+    n_it_max: null
+    n_ep_max: 300
+    batch_sizes: [256, 1024]  # Train and Eval batch sizes
+    grace_period: 1500
+    stream_setting: True
+    val_per_task: True
+
+    n_tasks: 100
+    log_steps: [1, 2, 3, 4, 5, 10]
+    log_epoch: True
+
+    patience: 300
+    plot_all: True
+
+    augment_data: True
+    normalize: True
+    schedule_mode: null
+
+seed: 343008097 # 1
+#seed: 815385667 # 2
+#seed: 722222941 # 3

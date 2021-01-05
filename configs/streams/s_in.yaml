@@ -1,0 +1,369 @@
+datasets:
+    task_gen:
+        _name: task_gen
+        n_initial_classes: 5
+        samples_per_class: [5000, 100, 1000]
+        split_names: ['Train', 'Val', 'Test']
+        tta: False
+
+        concept_pool:
+#            _name: mnist_tree
+            _name: md_tree
+#            _name: cifar100_tree
+
+        transformation_pool:
+            _name: rainbow_x_transformation
+#            _name: id_x_transformation
+#            format_image: True
+
+        strat:
+#            _name: mixed_remember
+#            _name: mixed_overwrite
+#            _name: mixed_transfo
+#            _name: mixed_fine_grained
+            _name: mixed_new_leg
+#            _name: mixed_all
+
+
+modules:
+    ll_models:
+#        inde-batch:
+#            _name: change-layer-resnet
+#            split_last: False
+#            share_layer: [0, 0, 0, 0, 0 ,0]
+#            ray_resources:
+#                cpu: 2
+#                gpu: 0.3
+#        finetune:
+#            _name: change-layer-resnet
+#            split_last: False
+#            share_layer: [1, 1, 1, 1, 1, 1]
+#            ray_resources:
+#                cpu: 2
+#                gpu: 0.3
+
+#        new-head-freez:
+#            _name: change-layer-resnet
+#            split_last: False
+#            share_layer: [1, 1, 1, 1, 1, 0]
+#            freeze_backbone: True
+#        new-head-finetune:
+#            _name: change-layer-resnet
+#            split_last: False
+#            share_layer: [1, 1, 1, 1, 1, 0]
+#            freeze_backbone: False
+#        new-leg-freez:
+#            _name: change-layer-resnet
+#            split_last: False
+#            share_layer: [0, 1, 1, 1, 1, 1]
+#            freeze_backbone: True
+#            ray_resources:
+#                cpu: 2
+#                gpu: 0.3
+#        new-leg-finetune:
+#            _name: change-layer-resnet
+#            split_last: False
+#            share_layer: [0, 1, 1, 1, 1, 1]
+#            freeze_backbone: False
+
+#
+#        ewc-full-1:
+#            _name: ewc-cnn
+#            share_head: False
+#            grid_params:
+#                learner-params:
+#                    lamda: 1
+#        ewc-full-5:
+#            _name: ewc-cnn
+#            share_head: False
+#            grid_params:
+#                learner-params:
+#                    lamda: 5
+#        ewc-full-10:
+#            _name: ewc-cnn
+#            share_head: False
+#            grid_params:
+#                learner-params:
+#                    lamda: 10
+#        ewc-full-50:
+#            _name: ewc-cnn
+#            share_head: False
+#            grid_params:
+#                learner-params:
+#                    lamda: 50
+#        ewc-full-100:
+#            _name: ewc-cnn
+#            share_head: False
+#            grid_params:
+#                learner-params:
+#                    lamda: 100
+#        ewc-full-500:
+#            _name: ewc-cnn
+#            share_head: False
+#            grid_params:
+#                learner-params:
+#                    lamda: 500
+#        ewc-full-1000:
+#            _name: ewc-cnn
+#            share_head: False
+#            grid_params:
+#                learner-params:
+#                    lamda: 1000
+#        ewc-full-5000:
+#            _name: ewc-cnn
+#            share_head: False
+#            grid_params:
+#                learner-params:
+#                    lamda: 5000
+#        ewc-full-10000:
+#            _name: ewc-cnn
+#            share_head: False
+#            grid_params:
+#                learner-params:
+#                    lamda: 10000
+#
+#        ewc-online-1-9:
+#            _name: ewc-cnn
+#            share_head: False
+#            online: True
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 1
+#        ewc-online-5-9:
+#            _name: ewc-cnn
+#            share_head: False
+#            online: True
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 5
+#        ewc-online-10-9:
+#            _name: ewc-cnn
+#            share_head: False
+#            online: True
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 10
+#        ewc-online-50-9:
+#            _name: ewc-cnn
+#            share_head: False
+#            online: True
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 50
+#        ewc-online-100-9:
+#            _name: ewc-cnn
+#            share_head: False
+#            online: True
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 100
+#        ewc-online-500-9:
+#            _name: ewc-cnn
+#            share_head: False
+#            online: True
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 500
+#        ewc-online-1000-9:
+#            _name: ewc-cnn
+#            share_head: False
+#            online: True
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 1000
+#        ewc-online-5000-9:
+#            _name: ewc-cnn
+#            share_head: False
+#            online: True
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 5000
+#        ewc-online-10000-9:
+#            _name: ewc-cnn
+#            share_head: False
+#            online: True
+#            gamma: 0.9
+#            grid_params:
+#                learner-params:
+#                    lamda: 10000
+
+#        er-ring:
+#            _name: er-cnn
+#            mode: ring
+#            mem_size_per_class: 15
+#            ray_resources:
+#                cpu: .1
+#                gpu: 0.3
+#        er-reservoir:
+#            _name: er-cnn
+#            mode: reservoir
+#            mem_size_per_class: 15
+#            ray_resources:
+#                cpu: .1
+#                gpu: 0.3
+
+#        PNN-fw:
+#            _name: pssn-resnet
+#            strat: full
+#            n_source_models: -1
+#            grid_params:
+#                optim:
+#                    - lr:  [1.e-2, 1.e-3]
+#                      weight_decay: [0, 1.e-4, 1.e-5]
+#                    - lr:  0
+#                      weight_decay: 0
+#                learner-params:
+#                    arch_loss_coef: 0
+#                    entropy_coef: 0
+#            ray_resources:
+#                cpu: 2
+#                gpu: 1
+#        PSSN-nas-full-fw:
+#            _name: pssn-resnet
+#            n_source_models: -1
+#            grid_params:
+#                optim:
+#                    - lr:  [1.e-2, 1.e-3]
+#                      weight_decay: [0, 1.e-4, 1.e-5]
+#                    - lr:  [1.e-2, 1.e-3]
+#                      weight_decay: 0
+#                learner-params:
+#                    arch_loss_coef: 0
+#                    entropy_coef: 0
+#                    split_training: True
+#            ray_resources:
+#                cpu: 1
+#                gpu: 0.3
+
+#        PSSN-nas-restricted-fw:
+#            _name: pssn-resnet
+#            n_source_models: 1
+#            grid_params:
+#                optim:
+#                    - lr:  [1.e-2, 1.e-3]
+#                      weight_decay: [0, 1.e-4, 1.e-5]
+#                    - lr:  [1.e-2, 1.e-3]
+#                      weight_decay: 0
+#                learner-params:
+#                    arch_loss_coef: 0
+#                    entropy_coef: 0
+#                    split_training: True
+#            ray_resources:
+#                cpu: .2
+#                gpu: 0.25
+##
+#        PSSN-search-6-fw:
+#            _name: pssn-resnet
+#            strat: search_all
+#            n_source_models: 1
+#            connections: [fw, bw]
+#            grid_params:
+#                optim:
+#                    - lr:  [1.e-2, 1.e-3]
+#                      weight_decay: [0, 1.e-4, 1.e-5]
+#                learner-params:
+#                    arch_loss_coef: 0
+#                    entropy_coef: 0
+#                    split_training: True
+#            ray_resources:
+#                cpu: 2
+#                gpu: 1
+#        PSSN-Alex-search-6-fw:
+#            _name: pssn-alexnet
+#            strat: search_all
+#            n_source_models: 1
+#            #            channel_scaling: True
+#            #            channel_scaling: True
+#            #            block_id: [0, 1, 2, 3, 4, 5 ,5, 5, 6, 7]
+#            #            n_convs: 3
+#            #            stride: [2,4,2]
+#            grid_params:
+#                optim:
+#                    #                    - lr:  [1.e-2]
+#                    #                      weight_decay: [1.e-5 ]
+#                    - lr:  [1.e-2, 1.e-3]
+#                      weight_decay: [0, 1.e-4, 1.e-5]
+#                learner-params:
+#                    arch_loss_coef: 0
+#                    entropy_coef: 0
+#                    split_training: True
+#            ray_resources:
+#                cpu: 2
+#                gpu: 1
+
+#        hat:
+#            _name: hat
+#            wide: 1
+#            #            hidden_size: [1]
+#            #            channel_scaling: False
+#            grid_params:
+#                optim:
+#                    lr:  [5.e-2, 1.e-2, 5.e-3, 1.e-3]
+#                    weight_decay: [0, 1.e-4, 1.e-5]
+#                #                    lr:  [1.e-3]
+#                #                    weight_decay: [0]
+#                learner-params:
+#                    lamda: [0.75]
+#                    smax: [400]
+#            ray_resources:
+#                cpu: 2
+#                gpu: 0.3
+#
+        wide-hat:
+            _name: hat
+            wide: 2.5
+            #            hidden_size: [1]
+            #            channel_scaling: False
+            grid_params:
+                optim:
+                    lr:  [5.e-2, 1.e-2, 5.e-3, 1.e-3]
+                    weight_decay: [0, 1.e-4, 1.e-5]
+                #                    lr:  [1.e-3]
+                #                    weight_decay: [0]
+                learner-params:
+                    lamda: [0.75]
+                    smax: [400]
+            ray_resources:
+                cpu: 2
+                gpu: 0.5
+
+optimizers:
+    optim:
+        _name: sgd
+        _modules: []
+
+experiment:
+    _name: stream_tuning
+
+#    ref_params_id: 2571
+
+    use_ray: True
+    use_processes: True
+    n_it_max: null
+    n_ep_max: 300
+    batch_sizes: [256, 1024]  # Train and Eval batch sizes
+    grace_period: 1500
+    stream_setting: True
+    val_per_task: True
+
+    n_tasks: 6
+    log_steps: [1, 2, 3, 4, 5, 10]
+    log_epoch: True
+
+    patience: 300
+    plot_all: True
+
+    augment_data: True
+    normalize: False
+    schedule_mode: null
+    plot_tasks: True
+
+seed: 32829033
