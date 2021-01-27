@@ -27,13 +27,13 @@ datasets:
 
 modules:
     ll_models:
-#        inde-batch:
-#            _name: change-layer-resnet
-#            split_last: False
-#            share_layer: [0, 0, 0, 0, 0 ,0]
-#            ray_resources:
-#                cpu: 2
-#                gpu: 0.3
+        inde-batch:
+            _name: change-layer-resnet
+            split_last: False
+            share_layer: [0, 0, 0, 0, 0 ,0]
+            ray_resources:
+                cpu: 2
+                gpu: 0.3
 #        finetune:
 #            _name: change-layer-resnet
 #            split_last: False
@@ -280,28 +280,28 @@ modules:
 #                cpu: 2
 #                gpu: 1
 
-        PSSN-Alex-search-6-fw:
-            _name: pssn-alexnet
-            strat: search_all
-            n_source_models: 1
+#        PSSN-Alex-search-6-fw:
+#            _name: pssn-alexnet
+#            strat: search_all
+#            n_source_models: 1
             #            channel_scaling: True
             #            channel_scaling: True
             #            block_id: [0, 1, 2, 3, 4, 5 ,5, 5, 6, 7]
             #            n_convs: 3
             #            stride: [2,4,2]
-            grid_params:
-                optim:
+#            grid_params:
+#                optim:
                     #                    - lr:  [1.e-2]
                     #                      weight_decay: [1.e-5 ]
-                    - lr:  [1.e-2, 1.e-3]
-                      weight_decay: [0, 1.e-4, 1.e-5]
-                learner-params:
-                    arch_loss_coef: 0
-                    entropy_coef: 0
-                    split_training: True
-            ray_resources:
-                cpu: 2
-                gpu: 1
+#                    - lr:  [1.e-2, 1.e-3]
+#                      weight_decay: [0, 1.e-4, 1.e-5]
+#                learner-params:
+#                    arch_loss_coef: 0
+#                    entropy_coef: 0
+#                    split_training: True
+#            ray_resources:
+#                cpu: 2
+#                gpu: 1
 
 #        hat:
 #            _name: hat

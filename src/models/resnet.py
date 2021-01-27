@@ -6,7 +6,7 @@
 from torch import nn
 from torchvision.models.resnet import conv3x3, conv1x1
 
-from src.modules.utils import Flatten
+from src.models.utils import Flatten
 
 
 class Contiguousize(nn.Module):

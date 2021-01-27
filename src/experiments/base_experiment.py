@@ -10,8 +10,8 @@ import torch
 import visdom
 from ctrl.strategies.mixed_strategy import MixedStrategy
 
-from src.modules import MultitaskHeadLLModel, MultitaskLegLLModel, HATLLModel
-from src.modules.utils import normalize_params_names
+from src.models import HATLLModel
+from src.models.utils import normalize_params_names
 from src.utils import load_conf, VISDOM_CONF_PATH
 from src.utils.plotting import get_env_name, update_summary, \
     plot_tasks_env_urls, write_text, update_avg_acc, update_pareto, \
@@ -38,21 +38,7 @@ class BaseExperiment(object):
         self.name = name
 
         assert isinstance(ll_models, dict)
-        if 'finetune-mt-head' in ll_models:
-            assert 'multitask-head' in ll_models and \
-                   isinstance(ll_models['multitask-head'],
-                              MultitaskHeadLLModel), \
-                'Fine tune should be associated with multitak LLModel'
-            ll_models['finetune-mt-head'].set_source_model(
-                ll_models['multitask-head'])
-        if 'finetune-mt-leg' in ll_models:
-            assert 'multitask-leg' in ll_models and \
-                   isinstance(ll_models['multitask-leg'],
-                              MultitaskLegLLModel), 'Fine tune leg should ' \
-                                                    'be associated with ' \
-                                                    'multitak Leg LLModel'
-            ll_models['finetune-mt-leg'].set_source_model(
-                ll_models['multitask-leg'])
+
         self.ll_models = ll_models
         self.learner_names = list(self.ll_models.keys())
         self.norm_models = norm_models

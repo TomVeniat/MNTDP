@@ -21,8 +21,8 @@ from ray.tune.logger import JsonLogger, CSVLogger
 from torchvision.transforms import transforms
 
 from src.experiments.base_experiment import BaseExperiment
-from src.modules.ExhaustiveSearch import ExhaustiveSearch
-from src.modules.utils import execute_step
+from src.models.ExhaustiveSearch import ExhaustiveSearch
+from src.models.utils import execute_step
 from src.train.ignite_utils import _prepare_batch
 from src.train.training import train, get_classic_dataloaders
 from src.train.utils import set_dropout, set_optim_params, \

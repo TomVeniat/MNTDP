@@ -8,8 +8,8 @@ import networkx as nx
 import torch
 import torch.nn as nn
 
-from src.modules.change_layer_llmodel import FrozenSequential
-from src.modules.utils import is_dummy_block, execute_step, graph_arch_details
+from src.models.change_layer_llmodel import FrozenSequential
+from src.models.utils import is_dummy_block, execute_step, graph_arch_details
 from src.train.training import get_classic_dataloaders, train
 from src.train.utils import _load_datasets
 from src.utils.misc import pad_seq

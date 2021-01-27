@@ -7,12 +7,12 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 
-from src.modules.samplers.arch_sampler import ArchSampler
-from src.modules.samplers.conditional_softmax_sampler import \
+from src.models.samplers.arch_sampler import ArchSampler
+from src.models.samplers.conditional_softmax_sampler import \
     CondiSoftmaxArchGenerator
-from src.modules.samplers.softmax_sampler import SoftmaxArchGenerator
-from src.modules.samplers.static_sampler import StaticArchGenerator
-from src.modules.utils import graph_arch_details
+from src.models.samplers.softmax_sampler import SoftmaxArchGenerator
+from src.models.samplers.static_sampler import StaticArchGenerator
+from src.models.utils import graph_arch_details
 from src.train.utils import strat_split_from_y, RoundRobinDataloader
 
 logger = logging.getLogger(__name__)

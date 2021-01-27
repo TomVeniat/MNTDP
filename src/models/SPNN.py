@@ -3,8 +3,8 @@ import copy
 import torch
 import torch.nn as nn
 
-from src.modules.change_layer_llmodel import FrozenSequential
-from src.modules.utils import is_dummy_block, _get_used_nodes
+from src.models.change_layer_llmodel import FrozenSequential
+from src.models.utils import is_dummy_block, _get_used_nodes
 from supernets.networks.StochasticSuperNetwork import StochasticSuperNetwork
 
 

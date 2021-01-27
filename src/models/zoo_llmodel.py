@@ -5,9 +5,9 @@
 
 import logging
 
-import src.modules.zoo.CifarResnet as cifar_resnet
-import src.modules.zoo.ImageNetResnet as imgnet_resnet
-from src.modules.ll_model import LifelongLearningModel
+import src.models.zoo.CifarResnet as cifar_resnet
+import src.models.zoo.ImageNetResnet as imgnet_resnet
+from src.models.ll_model import LifelongLearningModel
 
 logger = logging.getLogger(__name__)
 

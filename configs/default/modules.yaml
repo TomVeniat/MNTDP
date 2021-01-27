@@ -1,0 +1,796 @@
+model: &model
+    n_hidden: null
+    hidden_size: [64, 64]
+#    hidden_size: 100
+#    input_dim: 100
+#    input_dim: [3, 32, 32]
+    dropout_p: 0
+    n_convs: 0
+    pool:
+    pool_k:
+    padding:
+    k:
+    stride:
+    residual: False
+    norm_layer:
+    block_depth:
+    channel_scaling:
+
+    grid_params:
+        optim:
+            lr:  [1.e-2, 1.e-3]
+            weight_decay: [0, 1.e-4, 1.e-5]
+#        dropout: 0
+#        dropout: [0, 0.5]
+
+    ray_resources:
+        cpu: 0.1
+        gpu: 0.3
+
+
+multitask-head:
+    n_convs: 0
+    <<: *model
+
+multitask-leg:
+    <<: *model
+
+finetune-head:
+    <<: *model
+
+finetune-leg:
+    <<: *model
+
+pnn:
+    <<: *model
+    split_v: False
+
+resnet: &resnet
+    norm_layer: batch
+    hidden_size: [64]
+    channel_scaling: False
+    stride: [1, 1, 2, 2, 2]
+    pool: avgpool
+    pool_k: 4
+    n_convs: 5
+    padding: 1
+    residual: True
+    block_depth: 2
+    k: 3
+
+    dropout_p: []
+
+change-layer-resnet: &change-layer-resnet
+    <<: *model
+    <<: *resnet
+    share_layer: [1, 1, 1, 1, 1]
+    freeze_backbone: False
+    init: rand
+
+change-layer-alex: &change-layer-alex
+    <<: *model
+    share_layer: [1, 1, 1, 1, 1, 1]
+    hidden_size: [64, 128, 256, 2048, 2048]
+    dropout_p: [0.2, 0.2, 0.2, 0.5, 0.5]
+    init: rand
+    pool: maxpool
+    pool_k: 2
+    n_convs: 3
+    residual: False
+    stride: 1
+    k: [4, 3, 2]
+
+change-layer: &change-layer
+    <<: *model
+    share_layer: [0, 0, 0,]
+    hidden_size: [1000, 1000]
+    freeze_backbone: False
+    init: rand
+    n_convs: 0
+    residual: False
+    stride: 2
+    k: 3
+    grid_params:
+        optim:
+            lr:  [1.e-4, 1.e-3]
+            weight_decay: [0, 1.e-5]
+ssn:
+    <<: *model
+    share: False
+    freeze: False
+    model_params:
+        deter_eval: True
+        n_layer: 3
+        n_block: 1
+        n_chan: 16
+
+pssn: &pssn
+    <<: *model
+    deter_eval: True
+    use_adapters: False
+    connections: [fw]
+    initial_p: 1
+    pruning_treshold: 0.5
+    store_graphs: True
+    learn_in_and_out: True
+    learn_all: True
+    split_training: False
+    arch_sampler_type: conditional_softmax
+    single_stage: True
+#    strat: search_all
+    strat: nas
+#    dropout_p: []
+#    arch_sampler_type: static
+    grid_params:
+        optim:
+            - lr:  [1.e-2, 1.e-3]
+              weight_decay: [0, 1.e-4, 1.e-5]
+            - lr:  0.1
+              weight_decay: 0
+        learner-params:
+            arch_loss_coef: [0, 0.1, 0.01, 0.001]
+            entropy_coef: [100, 10, 1, 0.01, 0]
+            split_training: True
+    ray_resources:
+        cpu: .5
+        gpu: 0.2
+
+pssn-resnet: &pssn-resnet
+    <<: *pssn
+    <<: *resnet
+#    pool_k: 9
+    ray_resources:
+        cpu: 2
+        gpu: 0.3
+
+pssn-alexnet:
+    <<: *pssn
+    hidden_size: [64, 128, 256, 2048, 2048]
+    dropout_p: [0.2, 0.2, 0.5, 0.5, 0.5, null]
+#    init: rand
+    pool: maxpool
+    pool_k: 2
+    padding: 0
+    n_convs: 3
+    residual: False
+    stride: 1
+    k: [4, 3, 2]
+
+
+independent-more-data:
+    <<: *change-layer
+    n_samples_max: 3000
+
+independent-upper-bound:
+    <<: *change-layer
+    n_samples_max: -1
+
+er-fc:
+    <<: *model
+    mem_size_per_class: 10
+    hidden_size: [1000, 1000]
+    share_head: True
+
+er-cnn:
+    <<: *model
+    <<: *resnet
+    mem_size_per_class: 10
+    share_head: False
+
+hat:
+    #    <<: *model
+    #    <<: *resnet
+    n_hidden:
+    n_convs:
+    hidden_size: [10,10]
+    dropout_p:
+    channel_scaling:
+    clipgrad: 10000
+    thres_cosh: 50
+    thres_emb: 6
+    wide: False
+    mode: cnn
+
+
+
+ewc-fc:
+    <<: *model
+#    <<: *resnet
+    lamda: null
+    hidden_size: [1000, 1000]
+    online: False
+    classic: True
+    share_head: True
+    n_fisher_estimate_samples: 1000
+    ray_resources:
+        cpu: .5
+        gpu: 0.2
+    grid_params:
+        optim:
+            lr:  [1.e-4, 1.e-3]
+            weight_decay: [0, 1.e-5]
+
+ewc-cnn:
+    <<: *model
+    <<: *resnet
+    lamda: null
+    online: False
+    share_head: False
+    classic: False
+    n_fisher_estimate_samples: 1024
+    ray_resources:
+        cpu: .2
+        gpu: 0.25
+    grid_params:
+        optim:
+            lr:  [1.e-3]
+            weight_decay: [0, 1.e-4, 1.e-5]
+
+zoo:
+    <<: *model
+    model_name: null
+    model_params: null
+
+### model groups:
+debug-modules-dict:
+#    inde0:
+#        _name: change-layer
+#        share_layer: [0, 0, 0]
+#    inde1:
+#        _name: change-layer
+#        share_layer: [0, 0, 0]
+#    inde2:
+#        _name: change-layer
+#        share_layer: [0, 0, 0]
+#    ind3:
+#        _name: change-layer
+#        share_layer: [0, 0, 0]
+#    inde4:
+#        _name: change-layer
+#        share_layer: [0, 0, 0]
+#    pnn0:
+#        _name: pnn
+#    pnn1:
+#        _name: pnn
+#    pnn2:
+#        _name: pnn
+    pnn3:
+        _name: pnn
+#
+    #    same-model:
+#        _name: same-model
+#    new-head:
+#        _name: new-head
+#    inde:
+#        _name: independent
+#    inde-more-data:
+#        _name: independent-more-data
+#    inde-upper-bound:
+#        _name: independent-upper-bound
+#        train_samples: 1000
+#    multitask-head:
+#        _name: multitask-head
+#    new-leg:
+#        _name: new-leg
+#    finetune-mt-head:
+#        _name: finetune-head
+#    multitask-leg:
+#        _name: multitask-leg
+#    finetune-mt-leg:
+#        _name: finetune-leg
+#    same:
+#        _name: change-layer
+#        residual: False
+#        share_layer: [1, 1, 1]
+#    inde:
+#        _name: change-layer
+#        residual: False
+#        share_layer: [0, 0, 0]
+#    0-0-0-inde:
+#        _name: change-layer
+#        share_layer: [0, 0, 0, 0, 0, 0]
+#    1-1-1-same:
+#        _name: change-layer
+#        share_layer: [1, 1, 1, 1, 1, 1]
+#    inde-more-data:
+#        _name: independent-more-data
+
+data-models-dict:
+    inde-1:
+        _name: independent-upper-bound
+        train_samples: 1
+        grid_params:
+            lr: [1.e-2, 1.e-3]
+            wd: [0, 1.e-4]
+            dropout: [0, 0.5]
+    inde-3:
+        _name: independent-upper-bound
+        train_samples: 3
+        grid_params:
+            lr: [1.e-2, 1.e-3]
+            wd: [0, 1.e-4]
+            dropout: [0, 0.5]
+    inde-5:
+        _name: independent-upper-bound
+        train_samples: 5
+        grid_params:
+            lr: [1.e-2, 1.e-3]
+            wd: [0, 1.e-4]
+            dropout: [0, 0.5]
+    inde-10:
+        _name: independent-upper-bound
+        train_samples: 10
+        grid_params:
+            lr: [1.e-2, 1.e-3]
+            wd: [0, 1.e-4]
+            dropout: [0, 0.5]
+    inde-50:
+        _name: independent-upper-bound
+        train_samples: 50
+        grid_params:
+            lr: [1.e-2, 1.e-3]
+            wd: [0, 1.e-4]
+            dropout: [0, 0.5]
+
+    inde-100:
+        _name: independent-upper-bound
+        train_samples: 100
+        grid_params:
+            lr: [1.e-2, 1.e-3]
+            wd: [0, 1.e-4]
+            dropout: [0, 0.5]
+    inde-500:
+        _name: independent-upper-bound
+        train_samples: 500
+        grid_params:
+            lr: [1.e-2, 1.e-3]
+            wd: [0, 1.e-4]
+            dropout: [0, 0.5]
+    inde-1000:
+        _name: independent-upper-bound
+        train_samples: 1000
+        grid_params:
+            lr: [1.e-2, 1.e-3]
+            wd: [0, 1.e-4]
+            dropout: [0, 0.5]
+
+test-models-resnet-dict:
+    0-0-0-inde:
+        _name: change-layer
+        hidden_size: [32, 32]
+        residual: True
+        share_layer: [0, 0, 0, 0, 0, 0]
+    1-1-1-same:
+        _name: change-layer
+        hidden_size: [32, 32]
+        residual: True
+        share_layer: [1, 1, 1, 1, 1, 1]
+
+
+all-models-dict:
+    inde-more-data:
+        _name: independent-more-data
+        share_layer: [0, 0, 0]
+    inde-upper-bound:
+        _name: independent-upper-bound
+        train_samples: 4000
+        share_layer: [0, 0, 0]
+#    multitask-head:
+#        _name: multitask-head
+#    new-leg:
+#        _name: new-leg
+#    finetune-mt-head:
+#        _name: finetune-head
+#    multitask-leg:
+#        _name: multitask-leg
+#    finetune-mt-leg:
+#        _name: finetune-leg
+    0-0-0-inde:
+        _name: change-layer
+        share_layer: [0, 0, 0]
+    0-0-1:
+        _name: change-layer
+        share_layer: [0, 0, 1]
+    0-1-0:
+        _name: change-layer
+        share_layer: [0, 1, 0]
+    0-1-1-leg:
+        _name: change-layer
+        share_layer: [0, 1, 1]
+    1-0-0:
+        _name: change-layer
+        share_layer: [1, 0, 0]
+    1-0-1:
+        _name: change-layer
+        share_layer: [1, 0, 1]
+    1-1-0-head:
+        _name: change-layer
+        share_layer: [1, 1, 0]
+    1-1-1-same:
+        _name: change-layer
+        share_layer: [1, 1, 1]
+
+all-models-resnet-dict:
+    inde-more-data:
+        _name: independent-more-data
+        residual: True
+        share_layer: [0, 0, 0, 0, 0, 0]
+    inde-upper-bound:
+        _name: independent-upper-bound
+        train_samples: 4000
+        residual: True
+        share_layer: [0, 0, 0, 0, 0, 0]
+#    multitask-head:
+#        _name: multitask-head
+#    new-leg:
+#        _name: new-leg
+#    finetune-mt-head:
+#        _name: finetune-head
+#    multitask-leg:
+#        _name: multitask-leg
+#    finetune-mt-leg:
+#        _name: finetune-leg
+    0-0-0-0-0-0-inde:
+        _name: change-layer
+        residual: True
+        share_layer: [0, 0, 0, 0, 0, 0]
+    0-0-1-1-1-1:
+        _name: change-layer
+        residual: True
+        share_layer: [0, 0, 1, 1, 1, 1]
+#    0-1-0:
+#        _name: change-layer
+#        residual: True
+#        share_layer: [0, 0, 0, 0, 0, 0]
+    0-1-1-1-1-1-leg:
+        _name: change-layer
+        residual: True
+        share_layer: [0, 1, 1, 1, 1, 1]
+    1-1-1-1-0-0:
+        _name: change-layer
+        residual: True
+        share_layer: [1, 1, 1, 1, 0, 0]
+#    1-0-1:
+#        _name: change-layer
+#        residual: True
+#        share_layer: [0, 0, 0, 0, 0, 0]
+    1-1-1-1-1-0-head:
+        _name: change-layer
+        residual: True
+        share_layer: [1, 1, 1, 1, 1, 0]
+    1-1-1-1-1-1-same:
+        _name: change-layer
+        residual: True
+        share_layer: [1, 1, 1, 1, 1, 1]
+
+### ALL PSSN #############################################################
+
+all-pssn-dict:
+#    pssn-adapt-bw:
+#        _name: pssn
+#        n_convs: 0
+#        initial_p: 0.7
+#        bw_connections: True
+#        use_adapters: True
+
+#    PSSN:
+#        _name: pssn
+#        n_convs: 0
+#        initial_p: 0.95
+#        bw_connections: True
+#        use_adapters: False
+#        grid_params:
+#            optim:
+#                - lr:  [1.e-3, 1.e-4]
+#                  wd: 0
+#                - lr:  [1.e-1, 1.e-2, 1.e-3]
+#                  wd: 0
+#            learner-params:
+#                arch_loss_coef: [0.1, 0.03, 0.01, 0.007, 0.005, 0.003, 0.001]
+#
+#    PSSN-se:
+#        _name: pssn
+#        deter_eval: False
+#        n_convs: 0
+#        initial_p: 0.95
+#        bw_connections: True
+#        use_adapters: False
+#        grid_params:
+#            optim:
+#                - lr:  [1.e-3, 1.e-4]
+#                  wd: 0
+#                - lr:  [1.e-1, 1.e-2, 1.e-3]
+#                  wd: 0
+#            learner-params:
+#                arch_loss_coef: [0.1, 0.03, 0.01, 0.007, 0.005, 0.003, 0.001]
+
+    PSSN-nocost:
+        _name: pssn
+        n_convs: 0
+        initial_p: 0.95
+        bw_connections: True
+        use_adapters: False
+        grid_params:
+            optim:
+                - lr:  [1.e-2, 1.e-3, 1.e-4]
+                  wd: 0
+                - lr:  [1.e-1, 1.e-2, 1.e-3, 1.e-4]
+                  wd: 0
+            learner-params:
+                arch_loss_coef: 0
+
+    PSSN-se-nocost:
+        _name: pssn
+        deter_eval: False
+        n_convs: 0
+        initial_p: 0.95
+        bw_connections: True
+        use_adapters: False
+        grid_params:
+            optim:
+                - lr:  [1.e-2, 1.e-3, 1.e-4]
+                  wd: 0
+                - lr:  [1.e-1, 1.e-2, 1.e-3, 1.e-4]
+                  wd: 0
+            learner-params:
+                arch_loss_coef: 0
+
+###
+
+all-pssn-fc-dict:
+    PNN-fw:
+        _name: pssn
+        strat: full
+        n_source_models: -1
+        hidden_size: [1000, 1000]
+        grid_params:
+            optim:
+                - lr:  [1.e-4, 1.e-3]
+                  weight_decay: [0, 1.e-5]
+                - lr:  0
+                  weight_decay: 0
+            learner-params:
+                arch_loss_coef: 0
+                entropy_coef: 0
+        ray_resources:
+            cpu: .5
+            gpu: .3
+    PSSN-nas-full-fw:
+        _name: pssn
+        n_source_models: -1
+        hidden_size: [1000, 1000]
+        grid_params:
+            optim:
+                - lr:  [1.e-4, 1.e-3]
+                  weight_decay: [0, 1.e-5]
+                - lr:  [1.e-2, 1.e-3]
+                  weight_decay: 0
+            learner-params:
+                arch_loss_coef: [0, 1]
+                entropy_coef: 0
+    PSSN-nas-restricted-fw:
+        _name: pssn
+        n_source_models: 1
+        hidden_size: [1000, 1000]
+        grid_params:
+            optim:
+                - lr:  [1.e-4, 1.e-3]
+                  weight_decay: [0, 1.e-5]
+                - lr:  [1.e-2, 1.e-3]
+                  weight_decay: 0
+            learner-params:
+                arch_loss_coef: [0, 1,]
+                entropy_coef: 0
+    PSSN-search-6-fw:
+        _name: pssn
+        strat: search_all
+        n_source_models: 1
+        hidden_size: [1000, 1000]
+        grid_params:
+            optim:
+                - lr:  [1.e-4, 1.e-3]
+                  weight_decay: [0, 1.e-5]
+            learner-params:
+                arch_loss_coef: 0
+                entropy_coef: 0
+                #                arch_loss_coef: [1,3, 5, 7, 10 ]
+                split_training: True
+        #                - lr:  [1.e-1, 1.e-2]
+        #                  wd: 0
+        ray_resources:
+            cpu: 0.5
+            gpu: .5
+
+all-pssn-resnet-dict:
+    PNN-fw:
+        _name: pssn-resnet
+        norm_layer: batch
+        strat: full
+        n_source_models: -1
+        grid_params:
+            optim:
+                - lr:  [1.e-2, 1.e-3]
+                  weight_decay: [0, 1.e-4, 1.e-5]
+                - lr:  0
+                  weight_decay: 0
+            learner-params:
+                arch_loss_coef: 0
+                entropy_coef: 0
+        ray_resources:
+            cpu: .5
+            gpu: 1
+    PSSN-nas-full-fw:
+        _name: pssn-resnet
+        norm_layer: batch
+        n_source_models: -1
+        grid_params:
+            optim:
+                - lr:  [1.e-2, 1.e-3]
+                  weight_decay: [0, 1.e-4, 1.e-5]
+                - lr:  [1.e-2, 1.e-3]
+                  weight_decay: 0
+            learner-params:
+                arch_loss_coef: [0, 1]
+                entropy_coef: 0
+    PSSN-nas-restricted-fw:
+        _name: pssn-resnet
+        norm_layer: batch
+        n_source_models: 1
+        grid_params:
+            optim:
+                - lr:  [1.e-2, 1.e-3]
+                  weight_decay: [0, 1.e-4, 1.e-5]
+                - lr:  [1.e-2, 1.e-3]
+                  weight_decay: 0
+            learner-params:
+                arch_loss_coef: [0, 1,]
+                entropy_coef: 0
+#    PSSN-nas-full-fw:
+#        _name: pssn-resnet
+#        norm_layer: batch
+#        n_source_models: -1
+#        grid_params:
+#            optim:
+#                - lr:  [1.e-2]
+#                  wd: [0, 1.e-4, 1.e-5]
+#                - lr:  [1.e-2, 1.e-3]
+#                  wd: 0
+#            learner-params:
+#                arch_loss_coef: [1, 5, 10]
+#                entropy_coef: 0
+#                split_training: True
+#    PSSN-nas-restricted-bw:
+#        _name: pssn-resnet
+#        norm_layer: batch
+#        connections: [bw]
+#        n_source_models: 1
+#        grid_params:
+#            optim:
+#                - lr:  [1.e-2]
+#                  wd: [0, 1.e-4, 1.e-5]
+#                - lr:  [1.e-2, 1.e-3]
+#                  wd: 0
+#            learner-params:
+#                arch_loss_coef: [0, 1]
+#                entropy_coef: 0
+#    PSSN-nas-full-bw:
+#        _name: pssn-resnet
+#        norm_layer: batch
+#        connections: [bw]
+#        n_source_models: -1
+#        grid_params:
+#            optim:
+#                - lr:  [1.e-2]
+#                  wd: [0, 1.e-4, 1.e-5]
+#                - lr:  [1.e-2, 1.e-3]
+#                  wd: 0
+#            learner-params:
+#                arch_loss_coef: [-5, 1]
+#                entropy_coef: [0, 10, 50, 100]
+#                split_training: True
+    PSSN-search-6-fw: &search
+        _name: pssn-resnet
+        norm_layer: batch
+        strat: search_all
+        n_source_models: 1
+        grid_params:
+            optim:
+                - lr:  [1.e-2, 1.e-3]
+                  weight_decay: [0, 1.e-4, 1.e-5]
+            learner-params:
+                arch_loss_coef: 0
+                entropy_coef: 0
+                #                arch_loss_coef: [1,3, 5, 7, 10 ]
+                split_training: True
+        #                - lr:  [1.e-1, 1.e-2]
+        #                  wd: 0
+        ray_resources:
+            cpu: .5
+            gpu: 1
+#    PSSN-search-6-bw: &6bw
+#        _name: pssn-resnet
+#        norm_layer: batch
+#        strat: search_all
+#        connections: [bw]
+#        grid_params:
+#            optim:
+#                - lr:  [1.e-2, 1.e-3]
+#                  wd: [0, 1.e-4, 1.e-5]
+#            learner-params:
+#                arch_loss_coef: 0
+#                entropy_coef: 0
+#                #                arch_loss_coef: [1,3, 5, 7, 10 ]
+#                split_training: True
+##                - lr:  [1.e-1, 1.e-2]
+##                  wd: 0
+#        ray_resources:
+#            cpu: 2
+#            gpu: 1
+#    PSSN-search-6-bw-restricted:
+#        <<: *6bw
+#    PSSN-search-1-fw:
+#        <<: *search
+#        max_new_blocks: 1
+#    PSSN-search-1-bw:
+#        <<: *search
+#        connections: [bw]
+#        max_new_blocks: 1
+#    PSSN-search-2-fw:
+#        <<: *search
+#        max_new_blocks: 2
+#    PSSN-search-2-bw:
+#        <<: *search
+#        connections: [bw]
+#        max_new_blocks: 2
+#    PSSN-search-3-fw:
+#        <<: *search
+#        max_new_blocks: 3
+#    PSSN-search-3-bw:
+#        <<: *search
+#        connections: [bw]
+#        max_new_blocks: 3
+
+
+#    PSSN-layernorm:
+#        _name: pssn-resnet
+#        norm_layer: layer
+#        grid_params:
+#            optim:
+#                - lr:  [1.e-1, 1.e-2]
+#                  wd: 0
+#                - lr:  [1.e-1, 1.e-2, 1.e-3]
+#                  wd: 0
+#            learner-params:
+#                arch_loss_coef: [1]
+#                entropy_coef: [1]
+#                #                arch_loss_coef: [1,3, 5, 7, 10 ]
+#                split_training: True
+#    PSSN-instancenorm:
+#        _name: pssn-resnet
+#        norm_layer: instance
+#        grid_params:
+#            optim:
+#                - lr:  [1.e-1, 1.e-2]
+#                  wd: 0
+#                - lr:  [1.e-1, 1.e-2]
+#                  wd: 0
+#            learner-params:
+#                arch_loss_coef: [0]
+#                entropy_coef: [1]
+##                arch_loss_coef: [1,3, 5, 7, 10 ]
+#                split_training: True
+
+#    PSSN-se:
+#        _name: pssn-resnet
+#        deter_eval: False
+#        grid_params:
+#            optim:
+#                - lr:  [1.e-2]
+#                  wd: 0
+#                - lr:  [1.e-1, 1.e-2]
+#                  wd: 0
+#            learner-params:
+##                arch_loss_coef: [1,3, 5, 7, 10 ]
+#                arch_loss_coef: [0]
+#                split_training: True
+

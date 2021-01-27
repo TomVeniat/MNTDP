@@ -9,13 +9,14 @@ import torch
 import torch.nn as nn
 from sklearn.neighbors import KNeighborsClassifier
 
-from src.modules.ExhaustiveSearch import ExhaustiveSearch
-from src.modules.SPNN import SPNN
-from src.modules.change_layer_llmodel import _lin_block, _conv_block
-from src.modules.ll_model import LifelongLearningModel
-from src.modules.resnet import _make_layer, BasicBlock
-from src.modules.ssn_wrapper import SSNWrapper
-from src.modules.utils import _get_used_nodes, flatten
+from src.models.ExhaustiveSearch import ExhaustiveSearch
+from src.models.SPNN import SPNN
+from src.models.change_layer_llmodel import _lin_block, _conv_block
+from src.models.ll_model import LifelongLearningModel
+from src.models.modular_model import ModularModel
+from src.models.resnet import _make_layer, BasicBlock
+from src.models.ssn_wrapper import SSNWrapper
+from src.models.utils import _get_used_nodes, flatten
 from src.utils.plotting import graph_to_svg, plot_svg
 from supernets.interface.NetworkBlock import Add_Block, DummyBlock
 
@@ -49,7 +50,7 @@ class ZeroModel(nn.Module):
         return torch.zeros(x.size(0), self.n_classes).to(x.device)
 
 
-class ProgressiveSSN(LifelongLearningModel):
+class MNTDP(LifelongLearningModel, ModularModel):
     IN_NODE = 'INs'
     # COL_IN_NODE = 'IN{}'
     OUT_NODE = 'OUT'
@@ -61,7 +62,7 @@ class ProgressiveSSN(LifelongLearningModel):
                  strat, method='knn', block_id=None, n_neighbors=15,
                  max_new_blocks=float('inf'), arch_loss_coef=None,
                  n_source_models=-1, entropy_coef=None, *args, **kwargs):
-        super(ProgressiveSSN, self).__init__(*args, **kwargs)
+        super(MNTDP, self).__init__(*args, **kwargs)
         self.columns = []
 
         self.column_repr_sizes = []
@@ -124,8 +125,8 @@ class ProgressiveSSN(LifelongLearningModel):
                     new_res_size = last_size
                 self.hidden_size.append(new_size)
                 self._res_hidden_size.extend([new_res_size]*self.block_depth)
-            assert not self.dropout_p
-            self.dropout_p = [None] * (self.n_res_blocks + 2)
+            assert not self._dropout_p
+            self._dropout_p = [None] * (self.n_res_blocks + 2)
             self._pool_k = [None] * (self.n_convs)
             self._res_pool_k = np.array([None] * (self.n_res_blocks + 2))
             self._pool_k[-1] = pool_k
@@ -834,26 +835,6 @@ class ProgressiveSSN(LifelongLearningModel):
         self.entropy_coef = entropy_coef
         self.split_training = split_training
 
-
-def equal_nn_graphs(ga, gb):
-    a_nodes = set((n, tuple(sorted(d.items()))) for n, d in ga.nodes(True))
-    b_nodes = set((n, tuple(sorted(d.items()))) for n, d in gb.nodes(True))
-    if ga == gb:
-        return True
-    elif a_nodes == b_nodes and ga.edges == gb.edges:
-        return True
-    else:
-        if b_nodes != a_nodes:
-            print('Nodes issues')
-            print(a_nodes)
-            print(b_nodes)
-        elif ga.edges != gb.edges:
-            print('Edges issues')
-            print(ga.edges)
-            print(gb.edges)
-        else:
-            print('Meta problem')
-        return False
 
 
 def clean_graph(g, in_node, out_node):

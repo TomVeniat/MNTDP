@@ -4,7 +4,7 @@ import torch.nn.init as weight_init
 from torch import nn
 from torch.nn import Parameter
 
-from src.modules.samplers.arch_sampler import ArchSampler
+from src.models.samplers.arch_sampler import ArchSampler
 
 
 class StaticArchGenerator(ArchSampler):
