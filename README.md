@@ -6,10 +6,10 @@ This project contains different
 
 #### Dependencies
 ```bash
-conda create -n torch python=3.7
-conda activate torch
+conda create -n MNTDP python=3.8
+conda activate MNTDP
 pip install -r requirements.txt
-conda install pygraphviz
+#conda install pygraphviz
 ```
 
 Now let's get Mongo and start a server:
