@@ -14,7 +14,6 @@ import pandas
 import ray
 import torch
 import visdom
-import wandb
 from ray import tune
 from ray.tune import CLIReporter
 from ray.tune.logger import JsonLogger, CSVLogger
@@ -39,7 +38,6 @@ logger = logging.getLogger(__name__)
 
 class StreamTuningExperiment(BaseExperiment):
     def run(self):
-        wandb.init(project='CTrL', name=str(self.sacred_run._id))
         if self.task_gen.concept_pool.attribute_similarities is not None:
             attr_sim = self.task_gen.concept_pool.attribute_similarities
             self.main_viz.heatmap(attr_sim,
