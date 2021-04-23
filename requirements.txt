@@ -11,7 +11,7 @@ psutil
 #sacred
 pymongo
 imageio
-networkx
+networkx=2.3
 tabulate
 json2html
 pycocotools
