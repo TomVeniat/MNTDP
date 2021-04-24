@@ -258,21 +258,21 @@ modules:
 #                cpu: 2
 #                gpu: 0.25
 #
-#        PSSN-search-6-fw:
-#            _name: pssn-resnet
-#            strat: search_all
-#            n_source_models: 1
-#            grid_params:
-#                optim:
-#                    - lr:  [1.e-2, 1.e-3]
-#                      weight_decay: [0, 1.e-4, 1.e-5]
-#                learner-params:
-#                    arch_loss_coef: 0
-#                    entropy_coef: 0
-#                    split_training: True
-#            ray_resources:
-#                cpu: 2
-#                gpu: 1
+        PSSN-search-6-fw:
+            _name: pssn-resnet
+            strat: search_all
+            n_source_models: 1
+            grid_params:
+                optim:
+                    - lr:  [1.e-2, 1.e-3]
+                      weight_decay: [0, 1.e-4, 1.e-5]
+                learner-params:
+                    arch_loss_coef: 0
+                    entropy_coef: 0
+                    split_training: True
+            ray_resources:
+                cpu: 2
+                gpu: 1
 
 #        PSSN-Alex-search-6-fw:
 #            _name: pssn-alexnet
@@ -297,27 +297,27 @@ modules:
 #                cpu: 2
 #                gpu: 1
 
-        wide-hat:
-            _name: hat
-            wide: 2.5
-#            wide: 1
-            #            hidden_size: [1]
-            #            channel_scaling: False
-            grid_params:
-                optim:
-                    lr:  [5.e-2, 1.e-2, 5.e-3, 1.e-3]
-                    weight_decay: [0, 1.e-4, 1.e-5]
-                #                    lr:  [1.e-3]
-                #                    weight_decay: [0]
-                learner-params:
-                    lamda: [0.75]
-                    smax: [400]
-            ray_resources:
-                cpu: 2
-                gpu: 0.5
+#        wide-hat:
+#            _name: hat
+#            wide: 2.5
+##            wide: 1
+#            #            hidden_size: [1]
+#            #            channel_scaling: False
+#            grid_params:
+#                optim:
+#                    lr:  [5.e-2, 1.e-2, 5.e-3, 1.e-3]
+#                    weight_decay: [0, 1.e-4, 1.e-5]
+#                #                    lr:  [1.e-3]
+#                #                    weight_decay: [0]
+#                learner-params:
+#                    lamda: [0.75]
+#                    smax: [400]
+#            ray_resources:
+#                cpu: 2
+#                gpu: 0.5
 optimizers:
     optim:
-        _name: sgd
+        _name: adam
         _modules: []
 
 experiment:

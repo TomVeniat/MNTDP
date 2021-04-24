@@ -16,7 +16,7 @@ from torch.nn import functional as F, init
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from src.modules import ChangeLayerLLModel
+from src.models import ChangeLayerLLModel
 
 
 def get_data_loader(dataset):

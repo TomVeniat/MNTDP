@@ -14,15 +14,14 @@ import pandas
 import ray
 import torch
 import visdom
-import wandb
 from ray import tune
 from ray.tune import CLIReporter
 from ray.tune.logger import JsonLogger, CSVLogger
 from torchvision.transforms import transforms
 
 from src.experiments.base_experiment import BaseExperiment
-from src.modules.ExhaustiveSearch import ExhaustiveSearch
-from src.modules.utils import execute_step
+from src.models.ExhaustiveSearch import ExhaustiveSearch
+from src.models.utils import execute_step
 from src.train.ignite_utils import _prepare_batch
 from src.train.training import train, get_classic_dataloaders
 from src.train.utils import set_dropout, set_optim_params, \
@@ -39,7 +38,6 @@ logger = logging.getLogger(__name__)
 
 class StreamTuningExperiment(BaseExperiment):
     def run(self):
-        wandb.init(project='CTrL', name=str(self.sacred_run._id))
         if self.task_gen.concept_pool.attribute_similarities is not None:
             attr_sim = self.task_gen.concept_pool.attribute_similarities
             self.main_viz.heatmap(attr_sim,

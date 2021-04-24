@@ -3,7 +3,7 @@ import torch
 import torch.nn.functional as f
 from torch.distributions import Categorical
 
-from src.modules.samplers.softmax_sampler import SoftmaxArchGenerator
+from src.models.samplers.softmax_sampler import SoftmaxArchGenerator
 
 
 class CondiSoftmaxArchGenerator(SoftmaxArchGenerator):

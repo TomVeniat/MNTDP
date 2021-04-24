@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from src.modules.ll_model import LifelongLearningModel
+from src.models.ll_model import LifelongLearningModel
 
 
 class PNNLinearBlock(nn.Module):

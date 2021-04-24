@@ -5,7 +5,7 @@ import torch.nn.functional as f
 from torch import nn
 from torch.distributions import Categorical
 
-from src.modules.samplers.arch_sampler import ArchSampler
+from src.models.samplers.arch_sampler import ArchSampler
 
 
 class SoftmaxArchGenerator(ArchSampler):

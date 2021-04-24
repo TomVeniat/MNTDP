@@ -68,7 +68,7 @@ def train(model, train_loader, eval_loaders, optimizer, loss_fn,
         trainer.add_event_handler(Events.ITERATION_STARTED,
                                      model.new_iter_hook)
 
-    trainer._logger.setLevel(logging.WARNING)
+    trainer.logger.setLevel(logging.WARNING)
 
     # trainer output is in the format (x, y, y_pred, loss, optionals)
     train_loss = RunningAverage(output_transform=lambda out: out[3].item(),

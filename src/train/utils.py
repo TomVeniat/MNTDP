@@ -219,7 +219,7 @@ def evaluate(model, dataset, batch_size, device, out_id=0):
     }
     evaluator = create_supervised_evaluator(model, metrics=eval_metrics,
                                             device=device)
-    evaluator._logger.setLevel(logging.WARNING)
+    evaluator.logger.setLevel(logging.WARNING)
     evaluator.run(val_loader)
     metrics = evaluator.state.metrics
     return metrics['accuracy'], metrics['confusion']

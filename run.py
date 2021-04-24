@@ -13,7 +13,7 @@ from tqdm import tqdm
 
 from src.datasets import init_dataset
 from src.experiments import init_experiment
-from src.modules import init_module
+from src.models import init_module
 from src.optimizers import init_optimizer
 from src.utils import MONGO_CONF_PATH, LOCAL_SAVE_PATH, VISDOM_CONF_PATH, \
     load_conf

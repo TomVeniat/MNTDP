@@ -3,8 +3,8 @@ import logging
 import torch
 
 import numpy as np
-from src.modules.ll_model import LifelongLearningModel
-from src.modules.utils import get_conv_out_size
+from src.models.ll_model import LifelongLearningModel
+from src.models.utils import get_conv_out_size
 from src.utils.misc import count_params
 
 logger = logging.getLogger(__name__)

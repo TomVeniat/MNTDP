@@ -7,9 +7,10 @@ import logging
 
 from torch import nn
 
-from src.modules.ll_model import LifelongLearningModel
-from src.modules.resnet import _make_layer, BasicBlock
-from src.modules.utils import Flatten, count_params
+from src.models.ll_model import LifelongLearningModel
+from src.models.modular_model import ModularModel
+from src.models.resnet import _make_layer, BasicBlock
+from src.models.utils import Flatten, count_params
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +66,7 @@ def get_block(in_dim, out_dim, dropout_p, k, stride, pad, pool, pool_k,
     return nn.Sequential(*layers)
 
 
-class ChangeLayerLLModel(LifelongLearningModel):
+class ChangeLayerLLModel(LifelongLearningModel, ModularModel):
     def __init__(self, share_layer, k, pool, pool_k, padding, stride, residual,
                  norm_layer, block_depth, init, freeze_backbone,
                  *args, **kwargs):
@@ -103,7 +104,7 @@ class ChangeLayerLLModel(LifelongLearningModel):
                     new_size = last_size
                 self.hidden_size.append(new_size)
             self.hidden_size.extend([self.hidden_size[-1]]*self.n_new_layers)
-            assert not self.dropout_p
+            assert not self._dropout_p
             self.dropout_p = [None] * self.n_convs
             self._pool_k = [None] * self.n_convs
             self._pool_k[-1] = pool_k

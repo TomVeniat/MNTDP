@@ -10,7 +10,7 @@ import numpy as np
 import torch
 from torch import nn
 
-from src.modules.change_layer_llmodel import ChangeLayerLLModel
+from src.models.change_layer_llmodel import ChangeLayerLLModel
 
 logger = logging.getLogger(__name__)
 
