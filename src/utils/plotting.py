@@ -461,12 +461,6 @@ def update_acc_plots(all_perfs, name, viz):
     mean_perf_on_all_tasks = np.mean(current_accuracies)
     mean_perf_on_seen_tasks = np.mean(current_accuracies[:n_tasks])
     mean_perf_when_seen = np.mean(accuracies_when_seen)
-    print('y')
-    print([[mean_perf_on_all_tasks],
-           [mean_perf_on_seen_tasks],
-           [mean_perf_when_seen]])
-    print('x')
-    print([n_tasks])
     viz.line(Y=[[mean_perf_on_all_tasks],
                 [mean_perf_on_seen_tasks],
                 [mean_perf_when_seen]],
