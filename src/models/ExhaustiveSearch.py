@@ -120,7 +120,7 @@ class ExhaustiveSearch(nn.Module):
         ctx = torch.multiprocessing.get_context('spawn')
         # ctx = None
         # torch.multiprocessing.set_sharing_strategy('file_system')
-        all_res = execute_step(calls, True, 5, ctx=ctx)
+        all_res = execute_step(calls, True, 4, ctx=ctx)
         for path, res in zip(self.models_idx.keys(), all_res):
             self.res[path] = res
         all_res = list(map(lambda x: (x[1][2]['value'], x[0]), self.res.items()))
