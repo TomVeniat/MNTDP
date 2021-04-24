@@ -1,6 +1,5 @@
-# MNTDP Training
-
-This project contains different
+# MNTDP
+/!\ Documentation in progress, do not hesitate to open an issue for questions.
 
 ### Installation:
 
