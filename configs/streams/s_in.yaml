@@ -27,13 +27,13 @@ datasets:
 
 modules:
     ll_models:
-        inde-batch:
-            _name: change-layer-resnet
-#            split_last: False
-            share_layer: [0, 0, 0, 0, 0 ,0]
-            ray_resources:
-                cpu: 2
-                gpu: 0.3
+#        inde-batch:
+#            _name: change-layer-resnet
+##            split_last: False
+#            share_layer: [0, 0, 0, 0, 0 ,0]
+#            ray_resources:
+#                cpu: 2
+#                gpu: 0.3
 #        finetune:
 #            _name: change-layer-resnet
 #            split_last: False
@@ -338,7 +338,7 @@ modules:
 
 optimizers:
     optim:
-        _name: sgd
+        _name: adam
         _modules: []
 
 experiment:
