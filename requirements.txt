@@ -24,7 +24,7 @@ tensorboardx
 
 git+git://github.com/TomVeniat/sacred.git
 git+git://github.com/TomVeniat/SuperNetworks@channel_sampling
-git+git://github.com/facebookresearch/visdom.git
+git+git://github.com/TomVeniat/visdom.git@tmp
 git+git://github.com/pytorch/ignite.git
 git+git://github.com/facebookresearch/CTrLBenchmark.git
 
