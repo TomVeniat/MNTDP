@@ -8,7 +8,11 @@
 conda create -n MNTDP python=3.8
 conda activate MNTDP
 pip install -r requirements.txt
+conda install graphviz
+conda install pydot
 ```
+
+Depending on the stream `graphviz` and `pydot` may need to be installed, e.g. for `configs/streams/s_in.yaml`, as indicated above.
 
 Now let's get Mongo and start a server:
 
