@@ -8,7 +8,11 @@
 conda create -n MNTDP python=3.8
 conda activate MNTDP
 pip install -r requirements.txt
+conda install graphviz
+conda install pydot
 ```
+
+Depending on the stream `graphviz` and `pydot` may need to be installed, e.g. for `configs/streams/s_in.yaml`, as indicated above.
 
 Now let's get Mongo and start a server:
 
@@ -33,7 +37,7 @@ and then the experiment:
 python run.py with configs/streams/s_plus.yaml
 ```
 
-the different files in the `config/streams/` directory corresponds to the streams of the CTrL benchmark.
+the different files in the `config/streams/` directory corresponds to the streams of the CTrL benchmark. Use the `configs/streams/s_test.yaml` debug stream to test whether the code works correctly.
 
 
 To stop the mongo server:
