@@ -33,7 +33,7 @@ and then the experiment:
 python run.py with configs/streams/s_plus.yaml
 ```
 
-the different files in the `config/streams/` directory corresponds to the streams of the CTrL benchmark.
+the different files in the `config/streams/` directory corresponds to the streams of the CTrL benchmark. Use the `configs/streams/s_test.yaml` debug stream to test whether the code works correctly.
 
 
 To stop the mongo server:
